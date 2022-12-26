@@ -1,3 +1,7 @@
 .limit-height {
   max-height: 300px;
 }
+
+li a {
+  cursor: pointer;
+}
