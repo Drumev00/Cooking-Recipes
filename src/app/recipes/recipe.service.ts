@@ -1,11 +1,10 @@
-import { EventEmitter } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Ingredient } from '../shared/ingredient.model';
 import { Recipe } from './receipe.model';
 
 export class RecipesService {
   private recipes: Recipe[] = [
     new Recipe(
-      1,
       'Burger',
       'Very Delicious',
       'https://static.onecms.io/wp-content/uploads/sites/43/2022/09/26/25473-the-perfect-basic-burger-ddmfs-4x3-1350-1.jpg',
@@ -17,7 +16,6 @@ export class RecipesService {
       ]
     ),
     new Recipe(
-      2,
       'Schnitzel',
       'Delicious',
       'https://www.gutekueche.at/storage/media/recipe/106126/conv/wiener-schnitzel-default.jpg',
@@ -25,11 +23,28 @@ export class RecipesService {
     ),
   ];
 
+  recipesChanged = new Subject<Recipe[]>();
+
   getRecipes() {
     return this.recipes.slice();
   }
 
   getRecipe(id: number) {
-    return this.recipes.slice().find((recipe: Recipe) => recipe.id === id);
+    return this.recipes[id];
+  }
+
+  addRecipe(recipe: Recipe) {
+    this.recipes.push(recipe);
+    this.recipesChanged.next(this.recipes.slice());
+  }
+
+  updateRecipe(index: number, newRecipe: Recipe) {
+    this.recipes[index] = newRecipe;
+    this.recipesChanged.next(this.recipes.slice());
+  }
+
+  deleteRecipe(index: number) {
+    this.recipes.splice(index, 1);
+    this.recipesChanged.next(this.recipes.slice());
   }
 }
